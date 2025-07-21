@@ -10,8 +10,12 @@ warnings.filterwarnings("ignore")
 
 @st.cache_data
 def load_data():
-    bike_routes = gpd.read_file("bike_routes.geojson").to_crs(epsg=4326)
-    collisions = gpd.read_file("collisions.geojson").to_crs(epsg=4326)
+    import os
+
+    DATA_DIR = os.path.dirname(__file__)
+
+    bike_routes = gpd.read_file(os.path.join(DATA_DIR, "bike_routes.geojson")).to_crs(epsg=4326)
+    collisions = gpd.read_file(os.path.join(DATA_DIR, "collisions.geojson")).to_crs(epsg=4326)
     return bike_routes, collisions
 
 bike_routes, collisions = load_data()
