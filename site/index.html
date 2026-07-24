@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Suggested Isn't Safe: Ottawa's recommended bike routes, and where cyclists crash</title>
+  <meta name="description" content="The City of Ottawa recommends hundreds of kilometres of unprotected 'suggested' bike routes. A data story on where cyclists keep getting hit on them. Built by Malovey." />
+  <meta name="theme-color" content="#f7f5f1" />
+
+  <!-- Open source, no paid tiers: MapLibre GL, D3, Scrollama -->
+  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ───────────────────────── HERO ───────────────────────── -->
+<header class="hero" id="top">
+  <div class="hero__inner">
+    <p class="kicker">A <a class="malovey-link" href="https://www.malovey.com/?utm_source=suggested-isnt-safe&utm_medium=data-story&utm_campaign=malovey-portfolio" target="_blank" rel="noopener">Malovey</a> investigation · Ottawa</p>
+    <h1 class="hero__title">Suggested<br><span class="hero__title-em">Isn't&nbsp;Safe</span></h1>
+    <p class="hero__standfirst">
+      Ottawa recommends hundreds of kilometres of bike routes that offer no
+      physical protection. Just a sign, or a line of paint. This is where
+      cyclists keep getting hit on them.
+    </p>
+    <p class="hero__scrollcue" aria-hidden="true">Scroll<span class="hero__arrow">↓</span></p>
+  </div>
+</header>
+
+<!-- ─────────────────── SCENE 1: THE MAP ─────────────────── -->
+<section class="scene scene--map" id="scene-map" aria-label="Ottawa cycling network and cyclist collisions map">
+  <div class="scene__graphic">
+    <div id="map"></div>
+    <div id="map-scrim" class="map-scrim"></div>
+
+    <!-- Legend, revealed as tiers animate in -->
+    <div class="legend" id="legend" hidden>
+      <div class="legend__row" data-tier="suggested"><span class="legend__swatch sw-suggested"></span>Suggested route <em>(no protection)</em></div>
+      <div class="legend__row" data-tier="painted"><span class="legend__swatch sw-painted"></span>Painted bike lane</div>
+      <div class="legend__row" data-tier="protected"><span class="legend__swatch sw-protected"></span>Protected / segregated</div>
+      <div class="legend__row" data-tier="collision"><span class="legend__swatch sw-collision"></span>Cyclist collision, 2015–2019</div>
+    </div>
+
+    <!-- Floating annotation for the hook -->
+    <div class="map-annotation" id="hook-annotation" hidden>
+      <div class="map-annotation__num">12</div>
+      <div class="map-annotation__label">cyclist collisions<br>Elgin&nbsp;St @ Laurier&nbsp;Ave</div>
+    </div>
+  </div>
+
+  <div class="scene__steps">
+    <div class="step" data-mstep="0">
+      <div class="step__card">
+        <p class="step__eyebrow">One intersection</p>
+        <h2 class="step__big"><span class="num-red">12</span> cyclists hit</h2>
+        <p>At <strong>Elgin Street and Laurier Avenue</strong>, twelve people on bikes
+        were struck by drivers between 2015 and 2019. <strong>Five in 2016 alone</strong>,
+        the worst single year at any location in the city.</p>
+        <p class="step__note">Elgin Street here is a route the City of Ottawa
+        <em>recommends</em> cyclists take. It is a “suggested route”: no barrier,
+        no separation. Just paint and a sign.</p>
+      </div>
+    </div>
+
+    <div class="step" data-mstep="1">
+      <div class="step__card">
+        <p class="step__eyebrow">Zoom out</p>
+        <h2>Ottawa's “suggested” network</h2>
+        <p>Elgin isn't unusual. The city has drawn roughly
+        <strong>487&nbsp;km</strong> of <span class="ink-suggested">suggested&nbsp;routes</span>:
+        ordinary roads it marks as cycling routes without building anything to
+        protect the people riding them.</p>
+      </div>
+    </div>
+
+    <div class="step" data-mstep="2">
+      <div class="step__card">
+        <h2>Three tiers of “bike infrastructure”</h2>
+        <p>The network is a hierarchy. <span class="ink-protected">Protected lanes</span>
+        physically separate bikes from traffic. <span class="ink-painted">Painted lanes</span>
+        mark a space with a stripe. And <span class="ink-suggested">suggested routes</span>,
+        by far the most common, offer neither.</p>
+        <p class="step__note">Only about <strong>39&nbsp;km</strong> of the network is
+        physically protected. Suggested routes outnumber it more than <strong>twelve to one</strong>.</p>
+      </div>
+    </div>
+
+    <div class="step" data-mstep="3">
+      <div class="step__card">
+        <h2>Now add the crashes</h2>
+        <p>Every <span class="ink-red">red dot</span> is a location where a cyclist was
+        struck between 2015 and 2019: <strong>1,416 cyclist collisions</strong> in all.
+        Bigger dots mean more crashes at that spot.</p>
+        <p class="step__note">Watch where they land.</p>
+      </div>
+    </div>
+
+    <div class="step" data-mstep="4">
+      <div class="step__card">
+        <h2>They cluster on the routes the city recommends</h2>
+        <p><strong>451</strong> of those collisions, across <strong>314&nbsp;locations</strong>,
+        happened <em>on the suggested-route network itself</em>, the streets the city
+        tells cyclists to use.</p>
+        <p class="step__note">At <strong>75</strong> of those locations, cyclists were hit
+        more than once over the five years. Repeatedly, on the same unprotected streets.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── SCENE 2: THE STATISTICAL CASE ─────────────── -->
+<section class="scene scene--chart" id="scene-chart" aria-label="Where cyclists are struck most on suggested routes">
+  <div class="scene__graphic">
+    <div class="chart-wrap">
+      <p class="chart-title" id="chart-title">Cyclist collisions on suggested routes, 2015–2019</p>
+      <svg id="chart" role="img" aria-label="Bar chart of the worst suggested-route collision locations"></svg>
+      <p class="chart-source">Locations on Ottawa's suggested-route network with the most cyclist collisions.</p>
+    </div>
+  </div>
+  <div class="scene__steps">
+    <div class="step" data-cstep="0">
+      <div class="step__card step__card--solid">
+        <p class="step__eyebrow">The bigger picture</p>
+        <h2>This isn't one bad corner</h2>
+        <p>Elgin &amp; Laurier is the worst, but it sits at the top of a long list.
+        These are the suggested-route locations where Ottawa cyclists were struck
+        most often over five years.</p>
+      </div>
+    </div>
+    <div class="step" data-cstep="1">
+      <div class="step__card step__card--solid">
+        <h2>Every bar is a recommended route</h2>
+        <p>None of these locations offered physical protection. Each one is a place
+        the city's own network marks as a route to ride, and each one hit multiple
+        cyclists.</p>
+      </div>
+    </div>
+    <div class="step" data-cstep="2">
+      <div class="step__card step__card--solid">
+        <h2>Read these numbers carefully</h2>
+        <p>We're counting <em>collisions</em>, not comparing crash <em>rates</em> between
+        lane types. Protected lanes are built exactly where cycling is busiest, so a
+        naïve “crashes per kilometre” comparison is misleading, and we don't have
+        ridership data to correct for it.</p>
+        <p class="step__note">What the data does show plainly: real, repeated harm is
+        accumulating on the unprotected routes Ottawa actively recommends.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────── SCENE 3: GROUND IT LOCALLY ─────────────── -->
+<section class="section section--profiles" id="scene-profiles">
+  <div class="section__head">
+    <p class="kicker">On the ground</p>
+    <h2 class="section__title">Three routes Ottawa recommends</h2>
+    <p class="section__lede">Streets you can name, and what it has cost to ride them.</p>
+  </div>
+  <div class="profiles" id="profiles"><!-- rendered by JS --></div>
+</section>
+
+<!-- ─────────────── SCENE 4: THE ASK ─────────────── -->
+<section class="section section--ask" id="scene-ask">
+  <div class="ask__inner">
+    <p class="kicker">What “upgrading” looks like</p>
+    <h2 class="ask__title">Paint is not infrastructure.</h2>
+    <p class="ask__body">
+      Turning a suggested route into a protected one means a curb, a bollard, a
+      raised separation: something physical between a person on a bike and two
+      tonnes of moving metal. Ottawa has done it before: Laurier Avenue's own
+      segregated lane, a block from the worst intersection in this story, is proof
+      it's possible.
+    </p>
+    <p class="ask__body">
+      <a href="https://bikeottawa.ca/" target="_blank" rel="noopener">Bike Ottawa</a>
+      has mapped this gap for years and pushes the City to close it. The City's
+      <a href="https://ottawa.ca/en/parking-roads-and-travel/cycling" target="_blank" rel="noopener">cycling
+      infrastructure plans</a> decide which suggested routes finally get built for real.
+    </p>
+    <p class="ask__kicker">Suggested isn't safe. It's just cheaper.</p>
+  </div>
+</section>
+
+<!-- ─────────────── METHODOLOGY ─────────────── -->
+<footer class="methodology" id="methodology">
+  <div class="methodology__inner">
+    <h2 class="methodology__title">Methodology &amp; sources</h2>
+    <div class="methodology__grid">
+      <div>
+        <h3>Data</h3>
+        <p>Two City of Ottawa open datasets: the <strong>Ottawa Cycling Network</strong>
+        (route geometry classified by type, including “Suggested Route”) and
+        <strong>Traffic Collisions by Location, 2015–2019</strong> (collision counts by
+        location, with per-year cyclist and pedestrian breakdowns).</p>
+      </div>
+      <div>
+        <h3>Time window</h3>
+        <p>All collision figures cover <strong>2015–2019</strong>, a fixed five-year
+        historical window, <em>not</em> current-year data. Ottawa's network has changed
+        since; some suggested routes may have been upgraded or re-classified.</p>
+      </div>
+      <div>
+        <h3>“On a suggested route”</h3>
+        <p>A collision is counted as on the suggested network if it falls within
+        <strong>5&nbsp;metres</strong> of a “Suggested Route” line: the same spatial test
+        used in the project's original prototype. Field naming in the source is
+        inconsistent (e.g. <code>F2015_Cyclist</code> vs <code>F2016_Cyclists</code>); both
+        forms are handled.</p>
+      </div>
+      <div>
+        <h3>Limitations</h3>
+        <p>Collision points are geocoded to locations, not exact impact coordinates, so
+        the 5&nbsp;m test is approximate near intersections. The worst location, Elgin
+        &amp; Laurier, is where a suggested route <em>crosses</em> a protected corridor.
+        We report collision <strong>counts</strong>, not exposure-adjusted rates: without
+        ridership volumes, per-kilometre comparisons between lane types would be
+        misleading and are deliberately avoided.</p>
+      </div>
+    </div>
+    <div class="methodology__credit">
+      <p><strong>Suggested Isn't Safe</strong>. Built by
+        <a href="https://www.malovey.com/?utm_source=suggested-isnt-safe&utm_medium=data-story&utm_campaign=malovey-portfolio" target="_blank" rel="noopener">Malovey</a>,
+        a civic-tech studio. Data: City of Ottawa Open Data. Advocacy:
+        <a href="https://bikeottawa.ca/" target="_blank" rel="noopener">Bike Ottawa</a>.
+        Basemap © OpenStreetMap contributors, © CARTO.</p>
+      <p class="methodology__back"><a href="#top">↑ Back to top</a></p>
+    </div>
+  </div>
+</footer>
+
+<!-- Story data as window.STORY, so the page also works opened directly from disk (file://) -->
+<script src="data/story.js"></script>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+<script src="https://unpkg.com/scrollama@3.2.0/build/scrollama.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

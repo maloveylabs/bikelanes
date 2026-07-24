@@ -1,34 +1,63 @@
-Suggested Isn’t Safe – Reimagining Bike Infrastructure
+# Suggested Isn't Safe
 
-Suggested Isn’t Safe is a data-driven dashboard that reveals the hidden dangers of city streets where painted bike lanes are often mistaken for safety. By combining collision data, open street maps, and spatial overlays, the project challenges urban planning assumptions and calls for better cycling infrastructure.
+A scrollytelling data story on Ottawa's cycling network: the City classifies
+hundreds of kilometres of bike routes as "suggested" (shared roadways with no
+physical protection, just signs or paint), and cyclists keep getting struck on
+them. The piece overlays the suggested-route network against 2015 to 2019
+cyclist-collision data and grounds the pattern in named streets.
 
-🚲 Why This Matters
+Built by [Malovey](https://www.malovey.com), a civic-tech studio.
 
-In many cities, bike lanes are suggested—not protected. This tool makes it visually and spatially clear that painted lanes are not enough by showing the correlation between cyclist injuries and weak infrastructure.
+**Live:** https://system-errors.github.io/bikelanes/
 
-🧰 Tech Stack
+## What's here
 
-Streamlit for the frontend interface
-GeoJSON for spatial collision data visualization from the city of Ottawa
+```
+site/                     The static scrollytelling site (this is what deploys)
+  index.html              Markup + narrative copy
+  css/style.css           Editorial styling
+  js/main.js              Scrollama + MapLibre GL + D3 controller
+  data/story.json         Precomputed slim dataset
+  data/story.js           Same data as window.STORY (works from file:// too)
+scripts/precompute.py     Regenerates site/data/ from the raw GeoJSON
+bikelanes/                Raw source data + original Streamlit prototype (reference)
+  bike_routes.geojson     Ottawa Cycling Network (classified LineStrings)
+  collisions.geojson      Traffic Collisions by Location, 2015 to 2019
+  main.py                 Original Streamlit/geopandas prototype (spatial logic reference)
+```
 
-🧪 Features
+## Tech
 
-Interactive map showing dangerous intersections and infrastructure gaps
-Toggle between "suggested" vs. "protected" lanes
-Custom tooltips, filters, and spatial overlays
+Vanilla HTML/CSS/JS, no build step. [Scrollama](https://github.com/russellsamora/scrollama)
+for scroll triggers with CSS `position: sticky` for the pinned graphic,
+[MapLibre GL JS](https://maplibre.org/) for the animated map layers (CARTO Positron
+basemap, no paid tiers), and [D3](https://d3js.org/) for the supporting chart.
+Mobile-first; all asset paths are relative so the site runs from any subpath or
+directly from disk.
 
-🧭 Inspiration
+## Regenerating the data
 
-This project was inspired by:
+Only needed if the raw datasets change. The precompute scans the full collision
+file, buffers the "Suggested Route" lines by 5 m (matching the original
+prototype's spatial test), flags each cyclist collision as on/off the network,
+and emits a slim, simplified payload.
 
-Urbanist critiques of painted bike lanes
-A desire to intersect design, data, and city infrastructure
+```bash
+python3 scripts/precompute.py
+```
 
-🚧 Future Plans
+## Data & credits
 
-Add city-specific filters
-Exportable reports for advocacy groups
+- Data: City of Ottawa Open Data (Ottawa Cycling Network; Traffic Collisions by
+  Location, 2015 to 2019).
+- Advocacy: [Bike Ottawa](https://bikeottawa.ca/).
+- Basemap: © OpenStreetMap contributors, © CARTO.
 
-🧑‍💻 Author
+### A note on method
 
-Built by a computer scientist and software developer passionate about the intersections of urbanism, data, and design.
+The story reports collision **counts**, not exposure-adjusted rates. Protected
+lanes are built where cycling is busiest, so a naïve crashes-per-kilometre
+comparison across lane types would be misleading, and this dataset carries no
+ridership volumes to correct for it. What the data supports plainly: repeated
+cyclist collisions on the unprotected routes the City actively recommends. Full
+methodology is in the page footer.
