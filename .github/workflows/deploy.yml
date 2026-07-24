@@ -26,6 +26,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       # The site is fully static (no build step); publish the site/ folder as-is.
       - uses: actions/upload-pages-artifact@v3
         with:
