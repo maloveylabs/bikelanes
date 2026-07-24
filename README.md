@@ -8,7 +8,7 @@ cyclist-collision data and grounds the pattern in named streets.
 
 Built by [Malovey](https://www.malovey.com), a civic-tech studio.
 
-**Live:** https://system-errors.github.io/bikelanes/
+**Live:** https://maloveylabs.github.io/bikelanes/
 
 ## What's here
 
